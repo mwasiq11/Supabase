@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import supabase from "../supabase/supabaseClient";
+import { useNavigate } from "react-router-dom";
 export default function AuthForm() {
   const {
     register,
@@ -8,19 +9,18 @@ export default function AuthForm() {
     formState: { errors },
   } = useForm();
   const [isLogin, setisLogin] = useState(false);
-
-
+  const navigate=useNavigate()
   const onSubmit = async (data) => {
     let result;
     try {
       if (isLogin) {
-        await supabase.auth.signInWithPassword({
+        result=await supabase.auth.signInWithPassword({
           email: data.email,
           password: data.password,
         });
         console.log("User logged in:", result.data.user);
       } else {
-        await supabase.auth.signOut({
+        result=await supabase.auth.signUp({
           email: data.email,
           password: data.password,
           options: {
@@ -32,10 +32,12 @@ export default function AuthForm() {
         });
         console.log("user signed up", result.data.user);
       }
-      if (result.errors) {
-        throw result.errors;
+      
+      if (result.error) {
+        throw result.error;
       }
       console.log(isLogin? "SignIn":"SignUp",data)
+      navigate("/app")
 
     } catch (error) {
        console.error("Auth error:", error.message);
@@ -43,18 +45,15 @@ export default function AuthForm() {
     }
   };
 
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FEFFFF] px-4 py-8">
       <div className="flex flex-col-reverse lg:flex-row items-center justify-center gap-8 w-full max-w-6xl">
         <div className="flex-1 bg-[#FEFFFF] rounded-2xl p-6 sm:p-8 w-full max-w-md backdrop-blur-lg shadow-[5px_5px_10px_#babace,_-5px_-5px_10px_#ffffff]">
-          <div className="flex flex-row items-center">
-            <img
-              src="https://www.pngall.com/wp-content/uploads/16/Google-Gemini-Logo-Transparent.png"
-              alt="Logo"
-              className="h-12 mb-3"
-            />
+          <div className="flex flex-row justify-center">
+            
             <h2 className="bg-gradient-to-r from-[#C94AFD] to-[#4F77FF] bg-clip-text text-transparent text-2xl mb-4 sm:text-[2rem] md:text-[2.1rem] leading-tight font-bold lg:text-[2.2rem] ml-2">
-              Welcome to BotRix
+              Welcome 
             </h2>
           </div>
 

@@ -4,7 +4,6 @@ import supabase from "../supabase/supabaseClient";
 function TaskManager() {
   const [newTask, setNewTask] = useState({ title: "", description: "" });
   const [tasks, setTask] = useState([]);
-
   // Fetch tasks
   const fetchTask = async () => {
     const { error, data } = await supabase
@@ -68,6 +67,7 @@ function TaskManager() {
   useEffect(() => {
     fetchTask();
   }, []);
+
 
   return (
     <div className="max-w-xl mx-auto p-4 ">
